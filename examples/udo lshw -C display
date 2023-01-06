@@ -1,0 +1,6 @@
+6ac2:00:00.0 3D controller: Microsoft Corporation Device 008e
+	Physical Slot: 4165960256
+	Flags: bus master, fast devsel, latency 0
+	Capabilities: <access denied>
+	Kernel driver in use: dxgkrnl
+

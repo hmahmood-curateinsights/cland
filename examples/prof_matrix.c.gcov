@@ -1,0 +1,103 @@
+        -:    0:Source:prof_matrix.c
+        -:    0:Graph:prof_matrix.gcno
+        -:    0:Data:prof_matrix.gcda
+        -:    0:Runs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <string.h>
+        -:    4:
+        -:    5:struct Row {
+        -:    6:	int ncols;
+        -:    7:	void *data;
+        -:    8:	int datacellsize; 
+        -:    9:} ;   
+        -:   10:
+        -:   11:struct Matrix {
+        -:   12:	int nrows; 
+        -:   13:	struct Row **rows;  	
+        -:   14:} ;
+        -:   15:
+        -:   16:
+        -:   17:
+        1:   18:void init_row(struct Row *r, void *arr) {
+        1:   19:	int cols = r->ncols ; 
+        1:   20:	int elemSize = r->datacellsize; 
+        -:   21:
+        1:   22:	printf("This is the size being requested: %i  \n", elemSize*cols);
+        1:   23:	void *temp_data = malloc(elemSize*cols);
+        -:   24:
+       11:   25:	for(int i=0; i < cols; i++){
+       10:   26:		memcpy(( temp_data + i*elemSize), (arr + i*elemSize )  , elemSize);
+        -:   27:	} 
+        1:   28:	r->data = temp_data;		
+        1:   29:}
+        -:   30:
+        -:   31:
+       11:   32:void init_randomint_row(struct Row *r) {
+       11:   33:        int cols = r->ncols ;
+       11:   34:        int elemSize = r->datacellsize ;
+        -:   35:
+       11:   36:        void *temp_data = malloc(elemSize*cols);
+       11:   37:	printf("This is the size being requested: %i  \n", elemSize*cols);
+       11:   38:	if( temp_data == NULL ){
+    #####:   39:		while( temp_data == NULL ){
+    #####:   40:			printf("addr for temp_data: %p ", temp_data);
+    #####:   41:			temp_data = malloc(elemSize*cols);
+    #####:   42:			exit(1);
+        -:   43:		};
+        -:   44:	};
+        -:   45:	int rand_int; 
+      121:   46:        for(int i=0; i < cols; i++){
+      110:   47:		rand_int = random();
+      110:   48:                memcpy(( temp_data + i*elemSize), &rand_int , elemSize);
+        -:   49:        }; 
+       11:   50:        r->data = temp_data;
+       11:   51:}
+        -:   52:
+        -:   53:
+        1:   54:int main() {
+        -:   55:	
+        -:   56:	struct Row r;
+        1:   57:	r.ncols = 10;
+        1:   58:	r.datacellsize = sizeof(int);
+        -:   59:	
+        1:   60:	int arr[r.ncols] ;	
+        -:   61:
+       11:   62:	for(int i=0; i < r.ncols; i++){
+       10:   63:		arr[i] = random();
+        -:   64:	};
+        -:   65:	
+        1:   66:	init_randomint_row(&r); 
+        -:   67:	
+        -:   68:
+        1:   69:	init_row( &r , &arr); 
+        -:   70:	
+        -:   71:	struct Matrix mat;
+        -:   72:	// mat->rows = &r; 
+        -:   73:
+        1:   74:	int elemSize = r.datacellsize; 
+       11:   75:	for(int i=0; i < r.ncols; i++){
+       10:   76:		printf("This is (addr, value) : (%p, %i) \n", (r.data + i*elemSize)  , *(int *)(r.data + i*elemSize)  );
+        -:   77:	}
+        -:   78:	
+        1:   79:	int nrows = 10; 
+        1:   80:	struct Row *rows[nrows] ; 
+        -:   81:
+       11:   82:	for(int i=0; i < nrows; i++) {
+       10:   83:		printf("This is addr of rows %i: %p   \n", i, (rows+i))	 ;
+        -:   84:		struct Row tempr;
+       10:   85:		tempr.ncols = 10;
+       10:   86:		tempr.datacellsize = sizeof(int);
+       10:   87:		init_randomint_row(&tempr);
+       10:   88:		rows[i] = &tempr;  
+        -:   89:	
+        -:   90:	
+        -:   91:	} ; 
+        -:   92:
+        1:   93:	printf("This is value in collection of rows: %i \n", **rows); 
+        -:   94:
+        1:   95:	int v = random();
+        -:   96:
+        -:   97:
+        1:   98:	return 0;
+        -:   99:}
